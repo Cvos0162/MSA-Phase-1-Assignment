@@ -1,5 +1,7 @@
 import CircularProgress from '@material-ui/core/CircularProgress';
 import deepPurple from '@material-ui/core/colors/deepPurple';
+import Grid from '@material-ui/core/Grid';
+import GridList from '@material-ui/core/GridList';
 import Typography from '@material-ui/core/Typography';
 import * as React from "react";
 import { Card, CardContent, CardHeader } from '../../node_modules/@material-ui/core';
@@ -53,13 +55,14 @@ export default class Weather extends React.Component<any, any> {
         if (fetching) {
             return (
                 <div>
-                    {this.getCurrent()}
-                    {this.getForecast(1)}
-                    {this.getForecast(2)}
-                    {this.getForecast(3)}
-                    {this.getForecast(4)}
-                    {this.getForecast(5)}
-                    {this.getForecast(6)}
+                    <div>
+                        {this.getCurrent()}
+                    </div>
+                    <div>
+                        <GridList style={{flexWrap: "nowrap"}}>
+                            {[0, 1, 2, 3, 4, 5, 6].map(value => this.getForecast(value))}
+                        </GridList>
+                    </div>
                 </div>
             );
         } else {
@@ -72,6 +75,7 @@ export default class Weather extends React.Component<any, any> {
     }
 
     public getCurrent() {
+        const code = this.state.forecast[0].code;
         const sunrise = this.state.astronomy.sunrise;
         const sunset = this.state.astronomy.sunset;
         const humidity = this.state.atmosphere.humidity;
@@ -85,19 +89,50 @@ export default class Weather extends React.Component<any, any> {
         const low:number = this.state.forecast[0].low;
         const text = this.state.condition.text;
         return (
-            <div className="centreText">
-                <h3>Today</h3>
-                sunrise {sunrise}<br/>
-                sunset {sunset}<br/>
-                humidity {humidity}%<br/>
-                pressure {pressure}in<br/>
-                wind speed {windSpeed}mph<br/>
-                wind direction {windDirection}&deg;<br/>
-                {date} {day}<br/>
-                temp {temp}&deg;F<br/>
-                high {high}&deg;F<br/>
-                low {low}&deg;F<br/>
-                {text}<br/>
+            <div>
+                <Grid container={true} spacing={8}>
+                    <Grid item={true} xs={2} className="centreText">
+                        <img src={this.getImageAddress(code)} alt={"image not available for #"+code}/>
+                    </Grid>
+                    <Grid item={true} xs={2} className="centreText">
+                        <p>
+                            <h3><b>
+                                Today<br/>
+                            </b></h3>
+                            {date}<br/> {day}<br/>
+                        </p>
+                    </Grid>
+                    <Grid item={true} xs={1} className="centreText">
+                        <p>
+                            {text}
+                        </p>
+                    </Grid>
+                    <Grid item={true} xs={1} className="centreText">
+                        <p>
+                            <b>sunrise </b>{sunrise}<br/>
+                            <b>sunset</b> {sunset}
+                        </p>
+                    </Grid>
+                    <Grid item={true} xs={1} className="centreText">
+                        <p>
+                            <b>humidity </b>{humidity}%<br/>
+                            <b>pressure</b> {pressure}mb<br/>
+                        </p>
+                    </Grid>
+                    <Grid item={true} xs={2} className="centreText">
+                        <p>
+                            <b>wind speed </b>{windSpeed}mph<br/>
+                            <b>wind direction</b> {windDirection}&deg;<br/>
+                        </p>
+                    </Grid>
+                    <Grid item={true} xs={2} className="centreText">
+                        <p>
+                            <b>temp </b>{this.ftoC(temp).toFixed(1)}&deg;C<br/>
+                            <b>high</b> {this.ftoC(high).toFixed(1)}&deg;C<br/>
+                            <b>low </b>{this.ftoC(low).toFixed(1)}&deg;C<br/>
+                        </p>
+                    </Grid>
+                </Grid>
             </div>
         );
     }

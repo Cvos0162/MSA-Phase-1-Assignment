@@ -1,17 +1,25 @@
+html {
+    font-family: 'Roboto', sans-serif;
+}
 .centreText {
     text-align: center;
-    font-size: 14pt;
+    display:flex;
+    align-items: center;
+    justify-content: center; 
 }
 .tab {
     color: white;
     font-size: 14pt;
     font-weight: bold;
 }
-.yahooLogo {
-    align-content: right;
+.weatherMain {
+    height: 500px;
 }
-
 .weatherCard {
+    margin: 3pt;
     text-align: left;
-    max-width: 250px;
+    min-width: 250px;
+    max-width : 300px;
+    min-height: 200px;
+    max-height: 300px;
 }
