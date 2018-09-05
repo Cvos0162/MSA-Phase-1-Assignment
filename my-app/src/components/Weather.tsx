@@ -1,11 +1,14 @@
+import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import deepPurple from '@material-ui/core/colors/deepPurple';
+import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import GridList from '@material-ui/core/GridList';
+import Input from '@material-ui/core/Input'
 import Typography from '@material-ui/core/Typography';
-// import SearchBar from '@material-ui/core/'
 import * as React from "react";
 import { Card, CardContent, CardHeader } from '../../node_modules/@material-ui/core';
+import searchIcon from '../assets/if_11_Search_106236.png';
 import sunny from '../assets/Weather/if_weather-01_1530392.png';
 import partly_cloudy from '../assets/Weather/if_weather-02_1530391.png';
 import thundershower from '../assets/Weather/if_weather-08_1530385.png';
@@ -19,7 +22,6 @@ import foggy from '../assets/Weather/if_weather-27_1530368.png';
 import smoke from '../assets/Weather/if_weather-28_1530367.png';
 import shower from '../assets/Weather/if_weather-30_1530365.png';
 
-
 export default class Weather extends React.Component<any, any> {
     
     constructor(props: any){
@@ -32,30 +34,66 @@ export default class Weather extends React.Component<any, any> {
             isFetching: false,
             title: null,
             wind: null,
+            error: false,
+            location: "auckland"
         };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
   
     public componentWillMount() {
-        const url = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22auckland%2Cnz%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys';
+        const url = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places%20where%20text%3D%22' + this.state.location + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys';
         fetch(url)
             .then(response => response.json())
-            .then(result => this.setState(
+            .then(result => 
                 {
-                    isFetching : true,
-                    astronomy : result.query.results.channel.astronomy,
-                    atmosphere : result.query.results.channel.atmosphere,
-                    condition : result.query.results.channel.item.condition,
-                    forecast : result.query.results.channel.item.forecast,
-                    title : result.query.results.channel.item.title,
-                    wind : result.query.results.channel.wind,
-                }
-            ))
+                    try{
+                        let i = 0;
+                        let k = false;
+                        if (result.query.results.hasOwnProperty('channel')) {
+                            i = Object.keys(result.query.results.channel).length;
+                        } else {                    
+                            this.setState({isFetching : true,
+                                error: true});
+                        }
+                        for(let j = 0; j < i; j++) {
+                            if (result.query.results.channel[j].hasOwnProperty('item')) {
+                                this.setState(
+                                    {
+                                        isFetching : true,
+                                        astronomy : result.query.results.channel[j].astronomy,
+                                        atmosphere : result.query.results.channel[j].atmosphere,
+                                        condition : result.query.results.channel[j].item.condition,
+                                        forecast : result.query.results.channel[j].item.forecast,
+                                        title : result.query.results.channel[j].item.title,
+                                        wind : result.query.results.channel[j].wind,
+                                        error : false,
+                                    }
+                                )
+                                k = true;
+                                break;
+                            }
+                        }
+                        if (k === false) {                    
+                            this.setState({isFetching : true,
+                                error: true});
+                        }
+                    }
+                    catch(error){
+                        this.setState({isFetching : true,
+                            error: true});
+                    }
+            })
             .catch(null);
     }
 
     public load() {
         const fetching = this.state.isFetching;
-        if (fetching) {
+        const error = this.state.error;
+        if (error) {
+            return "Failed to fetch data, try again, maybe with more specified location name\n";
+        }
+        else if (fetching) {
             return (
                 <div>
                     <div>
@@ -70,7 +108,7 @@ export default class Weather extends React.Component<any, any> {
             );
         } else {
             return (
-                <div>
+                <div className="centerItem">
                     <CircularProgress style={{ color: deepPurple[500]}} thickness={4} />
                 </div>
             );
@@ -219,11 +257,37 @@ export default class Weather extends React.Component<any, any> {
         return temp;
     }
 
+    public handleChange(event:any){
+        this.setState({location: event.target.value});
+    }
+    
+    public handleSubmit(event:any) {
+        this.componentWillMount();
+        event.preventDefault();
+    }
+
     public render() {
         return (
-            <div className="centerItem">
+            <div>
                 <div>
                     {this.load()}
+                </div>
+                <Divider />
+                <div>
+                    <form onSubmit={this.handleSubmit}>
+                    <Input
+                        type="text"
+                        defaultValue={this.state.location}
+                        placeholder="Location"
+                        inputProps={{
+                            'aria-label': 'Description',
+                          }}
+                        onChange={this.handleChange}
+                    />
+                    <Button variant="fab" aria-label="Submit" value="submit">
+        <img src={searchIcon} style={{width:"50%", height:"50%"}} />
+      </Button>
+                    </form>
                 </div>
                 <div>
                     <a href="https://www.yahoo.com/?ilc=401" target="_blank"> <img src="https://poweredby.yahoo.com/purple.png" width="134" height="29"/> </a>
