@@ -12,8 +12,6 @@ export const Header: React.StatelessComponent<{}> = () => {
                     </IconButton>
                     <Typography variant="display2" color="inherit">
                         <Link className="tab" to="/"> Home </Link>
-                        <Link className="tab" to="/FirstComponent"> Page1 </Link>
-                        <Link className="tab" to="/SecondComponent"> Page2 </Link>
                         <Link className="tab" to="/Weather"> Weather </Link>
                     </Typography>
                 </Toolbar>

@@ -12,8 +12,15 @@ html {
     font-size: 14pt;
     font-weight: bold;
 }
+.centerItem{
+    justify-content: center;
+    align-items: center;
+}
 .weatherMain {
-    height: 500px;
+    margin: auto;
+    text-align: center;
+    min-height: 80%;
+    max-height: 90%;
 }
 .weatherCard {
     margin: 3pt;

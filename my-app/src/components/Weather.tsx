@@ -3,6 +3,7 @@ import deepPurple from '@material-ui/core/colors/deepPurple';
 import Grid from '@material-ui/core/Grid';
 import GridList from '@material-ui/core/GridList';
 import Typography from '@material-ui/core/Typography';
+// import SearchBar from '@material-ui/core/'
 import * as React from "react";
 import { Card, CardContent, CardHeader } from '../../node_modules/@material-ui/core';
 import sunny from '../assets/Weather/if_weather-01_1530392.png';
@@ -18,6 +19,7 @@ import foggy from '../assets/Weather/if_weather-27_1530368.png';
 import smoke from '../assets/Weather/if_weather-28_1530367.png';
 import shower from '../assets/Weather/if_weather-30_1530365.png';
 
+
 export default class Weather extends React.Component<any, any> {
     
     constructor(props: any){
@@ -25,6 +27,7 @@ export default class Weather extends React.Component<any, any> {
         this.state = {
             astronomy: null,
             atmosphere: null,
+            condition: null,
             forecast: null,
             isFetching: false,
             title: null,
@@ -68,28 +71,29 @@ export default class Weather extends React.Component<any, any> {
         } else {
             return (
                 <div>
-                    <CircularProgress style={{ color: deepPurple[500] }} thickness={4} />
+                    <CircularProgress style={{ color: deepPurple[500]}} thickness={4} />
                 </div>
             );
         }
     }
 
     public getCurrent() {
-        const code = this.state.forecast[0].code;
+        const title = this.state.title;
+        const code = this.state.condition.code;
         const sunrise = this.state.astronomy.sunrise;
         const sunset = this.state.astronomy.sunset;
         const humidity = this.state.atmosphere.humidity;
         const pressure = this.state.atmosphere.pressure;
         const windSpeed = this.state.wind.speed;
         const windDirection = this.state.wind.direction;
-        const date = this.state.forecast[0].date;
-        const day = this.state.forecast[0].day;
+        const date = this.state.condition.date;
         const temp = this.state.condition.temp;
         const high:number = this.state.forecast[0].high;
         const low:number = this.state.forecast[0].low;
         const text = this.state.condition.text;
         return (
-            <div>
+            <div className="weatherMain">
+                <h4><b> {title} </b></h4>
                 <Grid container={true} spacing={8}>
                     <Grid item={true} xs={2} className="centreText">
                         <img src={this.getImageAddress(code)} alt={"image not available for #"+code}/>
@@ -99,7 +103,7 @@ export default class Weather extends React.Component<any, any> {
                             <h3><b>
                                 Today<br/>
                             </b></h3>
-                            {date}<br/> {day}<br/>
+                            {date}<br/>
                         </p>
                     </Grid>
                     <Grid item={true} xs={1} className="centreText">
@@ -217,7 +221,7 @@ export default class Weather extends React.Component<any, any> {
 
     public render() {
         return (
-            <div>
+            <div className="centerItem">
                 <div>
                     {this.load()}
                 </div>
