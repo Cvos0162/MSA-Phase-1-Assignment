@@ -6,9 +6,9 @@ import Grid from '@material-ui/core/Grid';
 import GridList from '@material-ui/core/GridList';
 import Input from '@material-ui/core/Input'
 import Typography from '@material-ui/core/Typography';
+import SearchIcon from '@material-ui/icons/Search';
 import * as React from "react";
 import { Card, CardContent, CardHeader } from '../../node_modules/@material-ui/core';
-import searchIcon from '../assets/if_11_Search_106236.png';
 import sunny from '../assets/Weather/if_weather-01_1530392.png';
 import partly_cloudy from '../assets/Weather/if_weather-02_1530391.png';
 import thundershower from '../assets/Weather/if_weather-08_1530385.png';
@@ -204,6 +204,7 @@ export default class Weather extends React.Component<any, any> {
 
     public getImageAddress(code:string) {
         switch (code){
+        case '31':
         case '32':
         case '33':
         case '34':
@@ -275,18 +276,19 @@ export default class Weather extends React.Component<any, any> {
                 <Divider />
                 <div>
                     <form onSubmit={this.handleSubmit}>
+                    <b>
+                        City:
+                    </b>
                     <Input
-                        type="text"
+                        type="search"
                         defaultValue={this.state.location}
                         placeholder="Location"
-                        inputProps={{
-                            'aria-label': 'Description',
-                          }}
                         onChange={this.handleChange}
+                        style={{fontSize: "12pt", padding: "6pt", backgroundColor: "#f2f2f2"}}
                     />
-                    <Button variant="fab" aria-label="Submit" value="submit">
-        <img src={searchIcon} style={{width:"50%", height:"50%"}} />
-      </Button>
+                    <Button mini={true} variant="fab" aria-label="Submit" type="submit">
+                        <SearchIcon/>
+                    </Button>
                     </form>
                 </div>
                 <div>
