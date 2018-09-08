@@ -26,6 +26,7 @@ html {
 .weatherCard {
     margin: 3pt;
     text-align: left;
+    padding: 0;
     min-width: 250px;
     max-width : 300px;
     min-height: 200px;

@@ -30,12 +30,12 @@ export default class Weather extends React.Component<any, any> {
             astronomy: null,
             atmosphere: null,
             condition: null,
+            error: false,
             forecast: null,
             isFetching: false,
+            location: "auckland",
             title: null,
             wind: null,
-            error: false,
-            location: "auckland"
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -53,21 +53,23 @@ export default class Weather extends React.Component<any, any> {
                         if (result.query.results.hasOwnProperty('channel')) {
                             i = Object.keys(result.query.results.channel).length;
                         } else {                    
-                            this.setState({isFetching : true,
-                                error: true});
+                            this.setState({error: true,
+                                isFetching : true,
+                                });
                         }
                         for(let j = 0; j < i; j++) {
                             if (result.query.results.channel[j].hasOwnProperty('item')) {
                                 this.setState(
                                     {
-                                        isFetching : true,
                                         astronomy : result.query.results.channel[j].astronomy,
                                         atmosphere : result.query.results.channel[j].atmosphere,
                                         condition : result.query.results.channel[j].item.condition,
+                                        error : false,
                                         forecast : result.query.results.channel[j].item.forecast,
+                                        isFetching : true,
                                         title : result.query.results.channel[j].item.title,
                                         wind : result.query.results.channel[j].wind,
-                                        error : false,
+                                        
                                     }
                                 )
                                 k = true;
@@ -75,13 +77,15 @@ export default class Weather extends React.Component<any, any> {
                             }
                         }
                         if (k === false) {                    
-                            this.setState({isFetching : true,
-                                error: true});
+                            this.setState({error: true,
+                                isFetching : true,
+                                });
                         }
                     }
                     catch(error){
-                        this.setState({isFetching : true,
-                            error: true});
+                        this.setState({error: true,
+                            isFetching : true,
+                            });
                     }
             })
             .catch(null);
